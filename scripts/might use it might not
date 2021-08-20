@@ -1,0 +1,171 @@
+class room_status:
+    def submit(self):
+        myquery = {'date': request.form.get('date')}
+        newvalues = {"$set": {request.form.get(
+            'roomid'):  request.form.get('room_status')[0].upper()}}
+        print(db.users.find_one({'date': request.form.get('date')}))
+        print(request.form.get('date'))
+        if db.room_status.update_one(myquery, newvalues):
+            return jsonify(), 200
+        return jsonify({"error": "submittion failed"}), 400
+
+    def create_copy(self):
+        print("creating a copy")
+        date = datetime.datetime.now().strftime("%x").split("/")
+        formatdate = "20"+date[2]+"-"+date[0]+"-"+date[1]
+        print("date:"+str(formatdate))
+        count = db.room_status.count()
+        print("count:"+str(count))
+        new = db.room_status.find_one({
+            "_id": count
+        })
+        print(new)
+        new["_id"] = new["_id"] + 1
+        new["date"] = formatdate
+        if db.room_status.insert_one(new):
+            return True
+        return False
+
+
+class water_usage:
+    def submit(self):
+        # print(db.maintenance_log.count())
+        number = db.waterbill.count()+1
+        water_log = {
+            "_id": request.form.get('date').replace("-", "")+request.form.get('building')+request.form.get('floor'),
+            "date": request.form.get('date'),
+            "floor": request.form.get('building')+request.form.get('floor'),
+            "XX01": request.form.get('unit01'),
+            "XX02": request.form.get('unit02'),
+            "XX03": request.form.get('unit03'),
+            "XX04": request.form.get('unit04'),
+            "XX05": request.form.get('unit05'),
+            "XX06": request.form.get('unit06'),
+            "XX07": request.form.get('unit07'),
+            "XX08": request.form.get('unit08'),
+            "XX09": request.form.get('unit09'),
+            "XX10": request.form.get('unit11'),
+            "XX11": request.form.get('unit12'),
+            "XX12": request.form.get('unit13'),
+            "XX13": request.form.get('unit14'),
+            "XX14": request.form.get('unit15'),
+            "XX15": request.form.get('unit16')
+        }
+        query = db.room_status.find_one({"date": request.form.get('date')})
+        date = request.form.get('date').split("-")
+        format_date = datetime.datetime(
+            int(date[0]), int(date[1]), int(date[2]))
+        day_before = format_date-datetime.timedelta(days=1)
+        string_day_before = day_before.strftime("%Y%m%d")
+        day_before_query = db.waterbill.find_one(
+            {"_id": string_day_before+request.form.get('building')+request.form.get('floor')})
+        print(query)
+        for i in range(1, 10):
+            if water_log["XX0"+str(i)] != None:
+                print("checkpoint 1")
+                print(water_log["floor"]+"0"+str(i))
+                if int(water_log["XX0"+str(i)]) != int(day_before_query["XX0"+str(i)]) and query[water_log["floor"]+"0"+str(i)] == "E":
+                    # print("checkpoint 2")
+                    insert = {
+                        "_id": uuid.uuid4().hex,
+                        "roomid": water_log["floor"]+"0"+str(i),
+                        "date": request.form.get('date'),
+                        "status": query[water_log["floor"]+"0"+str(i)],
+                        "utility": "water",
+                        "unit": water_log["XX0"+str(i)]
+                    }
+                    db.outlier.insert_one(insert)
+        for i in range(10, 16):
+            # print(water_log["XX"+str(i)])
+            if water_log["XX"+str(i)] != None:
+                # print("checkpoint 3")
+                if int(water_log["XX"+str(i)]) != day_before_query["XX"+str(i)] and query[water_log["floor"]+str(i)] == "E":
+                    # print("checkpoint 4")
+                    insert = {
+                        "_id": uuid.uuid4().hex,
+                        "roomid": water_log["floor"]+str(i),
+                        "date": request.form.get('date'),
+                        "status": query[water_log["floor"]+str(i)],
+                        "utility": "water",
+                        "unit": water_log["XX"+str(i)]
+                    }
+                    db.outlier.insert_one(insert)
+        # print(water_log)
+        if db.waterbill.insert_one(water_log):
+            return jsonify(water_log), 200
+        return jsonify({"error": "submittion failed"}), 400
+
+
+class elec_usage:
+    def submit(self):
+        number = db.elecbill.count()+1
+        water_log = {
+            "_id": request.form.get('date').replace("-", "")+request.form.get('building')+request.form.get('floor'),
+            "date": request.form.get('date'),
+            "floor": request.form.get('building')+request.form.get('floor'),
+            "XX01": request.form.get('unit01'),
+            "XX02": request.form.get('unit02'),
+            "XX03": request.form.get('unit03'),
+            "XX04": request.form.get('unit04'),
+            "XX05": request.form.get('unit05'),
+            "XX06": request.form.get('unit06'),
+            "XX07": request.form.get('unit07'),
+            "XX08": request.form.get('unit08'),
+            "XX09": request.form.get('unit09'),
+            "XX10": request.form.get('unit11'),
+            "XX11": request.form.get('unit12'),
+            "XX12": request.form.get('unit13'),
+            "XX13": request.form.get('unit14'),
+            "XX14": request.form.get('unit15'),
+            "XX15": request.form.get('unit16')
+        }
+        query = db.room_status.find_one({"date": request.form.get('date')})
+        date = request.form.get('date').split("-")
+        format_date = datetime.datetime(
+            int(date[0]), int(date[1]), int(date[2]))
+        day_before = format_date-datetime.timedelta(days=1)
+        string_day_before = day_before.strftime("%Y%m%d")
+        day_before_query = db.waterbill.find_one(
+            {"_id": string_day_before+request.form.get('building')+request.form.get('floor')})
+        # print(string_day_before+request.form.get('building')+request.form.get('floor'))
+        for i in range(1, 10):
+            # print(i)
+            # print(water_log["XX0"+str(i)])
+            if water_log["XX0"+str(i)] != None:
+                # print("checkpoint 1")
+                if int(water_log["XX0"+str(i)]) != day_before_query["XX0"+str(i)] and query[water_log["floor"]+"0"+str(i)] == "E":
+                    # print("checkpoint 2")
+                    insert = {
+                        "_id": uuid.uuid4().hex,
+                        "roomid": water_log["floor"]+"0"+str(i),
+                        "date": request.form.get('date'),
+                        "status": query[water_log["floor"]+"0"+str(i)],
+                        "utility": "elec",
+                        "unit": water_log["XX0"+str(i)]
+                    }
+                    db.outlier.insert_one(insert)
+        for i in range(10, 16):
+            # print(water_log["XX"+str(i)])
+            if water_log["XX"+str(i)] != None:
+                # print("checkpoint 3")
+                if int(water_log["XX"+str(i)]) != day_before_query["XX"+str(i)] and query[water_log["floor"]+str(i)] == "E":
+                    # print("checkpoint 4")
+                    insert = {
+                        "_id": uuid.uuid4().hex,
+                        "roomid": water_log["floor"]+str(i),
+                        "date": request.form.get('date'),
+                        "status": query[water_log["floor"]+str(i)],
+                        "utility": "elec",
+                        "unit": water_log["XX"+str(i)]
+                    }
+                    db.outlier.insert_one(insert)
+        # print(water_log)
+        if db.elecbill.insert_one(water_log):
+            return jsonify(water_log), 200
+        return jsonify({"error": "submittion failed"}), 400
+
+
+sched = BackgroundScheduler()
+sched.add_job(room_status().create_copy, 'cron',
+              hour=0, minute=0, misfire_grace_time=60)
+sched.start()
