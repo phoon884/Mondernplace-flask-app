@@ -1,4 +1,4 @@
-APScheduler==3.6.3 <--
+APScheduler==3.6.3
 astroid==2.4.2
 async-generator==1.10
 attrs==20.3.0
