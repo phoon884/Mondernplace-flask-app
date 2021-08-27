@@ -1,6 +1,6 @@
 import pymongo
 
-client = pymongo.MongoClient("mongodb://admin:PYRIciOtEre@localhost:27018")
+client = pymongo.MongoClient("mongodb+srv://tmathanukraw:muLVUMKU27K@modernplace.s3mmk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 db = client.ModernplacesDatabase
 buildings = ["A", "B"]
 rooms = ["01", "02", "03", "04", "05", "06", "07",

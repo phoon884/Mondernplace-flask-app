@@ -26,12 +26,12 @@ app.config["JWT_COOKIE_SECURE"] = False
 app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 app.config['JWT_SECRET_KEY'] = os.environ['SECRET_KEY']
 app.config['REFRESH_KEY'] = os.environ['REFRESH_KEY']
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
-CORS(app, origins="http://localhost", supports_credentials=True)
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=24)
+CORS(app, origins=os.environ['FRONTEND_URL'], supports_credentials=True)
 
 
 # Database
-client = pymongo.MongoClient("mongodb://admin:PYRIciOtEre@mongodb_container:27018")      #'localhost', 27018
+client = pymongo.MongoClient(os.environ["DB_STRING"])     
 db = client.ModernplacesDatabase
 
 from src.ElectricBill import ElectricBill
