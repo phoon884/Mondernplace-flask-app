@@ -36,7 +36,7 @@ class User:
 
         if db.users.insert_one(user):
             token = create_access_token(identity=user)
-            return jsonify({'token': token.decode('UTF-8')}), 200
+            return jsonify({"msg": "signup successful"}), 200
 
         return jsonify({"error": "Signup failed"}), 400
 

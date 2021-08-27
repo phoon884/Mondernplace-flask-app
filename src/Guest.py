@@ -134,6 +134,8 @@ class Guest:
     def RetrievePaymentDue(self):
         try:
             data = list(db.payment.find({},{"_id":0}).sort("date",-1))
+            if not data:
+                return {'Status': "Success", "data": []}
             print(data)
             return {'Status': "Success", "data": data}
         except Exception as e:

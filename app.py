@@ -21,19 +21,18 @@ from datetime import timezone
 
 app = Flask(__name__)
 jwt = JWTManager(app)
-app.debug = True
 
 app.config["JWT_COOKIE_SECURE"] = False
 app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 app.config['JWT_SECRET_KEY'] = os.environ['SECRET_KEY']
 app.config['REFRESH_KEY'] = os.environ['REFRESH_KEY']
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
-CORS(app, origins="http://localhost:3000", supports_credentials=True)
+CORS(app, origins="http://localhost", supports_credentials=True)
 
 
 # Database
-client = pymongo.MongoClient('localhost', 27017)
-db = client.user_login_system
+client = pymongo.MongoClient("mongodb://admin:PYRIciOtEre@mongodb_container:27018")      #'localhost', 27018
+db = client.ModernplacesDatabase
 
 from src.ElectricBill import ElectricBill
 from src.WaterBill import WaterBill
@@ -43,10 +42,6 @@ from src.User import User
 from src.Scheduler import Duplicate,Checkwaterflow,UpdatePaymentDue, CheckElectricityLeak,AutoUpdate
 
 # Routes
-@app.route('/')
-def home():
-    return render_template('home.html')
-
 
 @app.after_request
 def refresh_expiring_jwts(response):
@@ -63,74 +58,74 @@ def refresh_expiring_jwts(response):
         return response
 
 
-@app.route("/protected")
+@app.route("/api/protected")
 @jwt_required()
 def protected():
     return jsonify(status="success")
 
 
-@app.route('/maintenance_log/submit', methods=['POST'])
+@app.route('/api/maintenance_log/submit', methods=['POST'])
 @jwt_required()
 def maintenance_log_submit():
     return Maintenance_log().submit()
 
 
-@app.route('/guest/add_guest', methods=['POST'])
+@app.route('/api/guest/add_guest', methods=['POST'])
 @jwt_required()
 def guest_add_guest():
     return Guest().Add_Guest()
 
-@app.route('/guest/retrieve_room', methods=['POST'])
+@app.route('/api/guest/retrieve_room', methods=['POST'])
 @jwt_required()
 def guest_retrieve_room():
     return Guest().RetrieveRoom()
 
 
-@app.route('/guest/remove_guest', methods=['POST'])
+@app.route('/api/guest/remove_guest', methods=['POST'])
 @jwt_required()
 def guest_Remove_Guest():
     return Guest().Remove_Guest()
 
-@app.route('/guest/retrieve_payment_due')
+@app.route('/api/guest/retrieve_payment_due')
 @jwt_required()
 def guest_Retrieve_Payment_Due():
     return Guest().RetrievePaymentDue()
 
-@app.route('/guest/remove_payment_due',methods=['POST'])
+@app.route('/api/guest/remove_payment_due',methods=['POST'])
 @jwt_required()
 def guest_Remove_Payment_Due():
     return Guest().RemovePaymentDue()
 
 
-@app.route('/guest/retrieve_data', methods=['POST'])
+@app.route('/api/guest/retrieve_data', methods=['POST'])
 @jwt_required()
 def guest_Retrieve_Data():
     return Guest().RetrieveData()
 
 
-@app.route('/waterbill/input', methods=['POST'])
+@app.route('/api/waterbill/input', methods=['POST'])
 @jwt_required()
 def waterbill_input():
     return WaterBill().Input()
 
 
-@app.route('/electricbill/input', methods=['POST'])
+@app.route('/api/electricbill/input', methods=['POST'])
 @jwt_required()
 def electricbill_input():
     return ElectricBill().Input()
 
 
-@app.route('/user/signup', methods=['POST'])
+@app.route('/api/user/signup', methods=['POST'])
 def signup():
     return User().signup()
 
 
-@app.route('/user/signout')
+@app.route('/api/user/signout')
 def signout():
     return User().signout()
 
 
-@app.route('/user/login', methods=['POST'])
+@app.route('/api/user/login', methods=['POST'])
 def login():
     return User().login()
 

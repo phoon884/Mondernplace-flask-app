@@ -1,7 +1,7 @@
 import pymongo
 
-client = pymongo.MongoClient('localhost', 27017)
-db = client.user_login_system
+client = pymongo.MongoClient("mongodb://admin:PYRIciOtEre@localhost:27018")
+db = client.ModernplacesDatabase
 buildings = ["A", "B"]
 rooms = ["01", "02", "03", "04", "05", "06", "07",
          "08", "09", "10", "11", "12", "13", "14", "15"]
