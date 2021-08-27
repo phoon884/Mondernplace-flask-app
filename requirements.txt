@@ -8,3 +8,4 @@ wrapt==1.12.1
 tzlocal == 2.1
 flask_praetorian == 1.2.0
 gunicorn == 20.1.0
+dnspython == 2.1.0
