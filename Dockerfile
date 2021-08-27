@@ -11,4 +11,4 @@ COPY . .
 
 ENV FLASK_APP app.py
 
-CMD gunicorn --bind 0.0.0.0:$PORT wsgi
+CMD gunicorn --bind 0.0.0.0:$PORT 
