@@ -1,7 +1,7 @@
 build:
   docker:
     web: nginx/dockerfile
-    worker: dockerfile
+    worker: Dockerfile
   config: 
     APP_ENV: "prod"
     APP_NAME: "webserver"
