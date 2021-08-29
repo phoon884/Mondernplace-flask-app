@@ -26,7 +26,7 @@ app.config["JWT_COOKIE_SECURE"] = True
 app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 app.config['JWT_SECRET_KEY'] = os.environ['SECRET_KEY']
 app.config['REFRESH_KEY'] = os.environ['REFRESH_KEY']
-app.config['JWT_COOKIE_DOMAIN'] = os.environ['FRONTEND_URL']
+app.config['JWT_COOKIE_DOMAIN'] = "https://modernplace.herokuapp.com/"
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=24)
 CORS(app, origins=os.environ['FRONTEND_URL'], supports_credentials=True)
 
