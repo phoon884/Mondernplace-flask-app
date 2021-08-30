@@ -117,9 +117,9 @@ def electricbill_input():
     return ElectricBill().Input()
 
 
-@app.route('/api/user/signup', methods=['POST'])
-def signup():
-    return User().signup()
+# @app.route('/api/user/signup', methods=['POST'])
+# def signup():
+#     return User().signup()
 
 
 @app.route('/api/user/signout')
