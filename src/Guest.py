@@ -1,7 +1,7 @@
 from src.Helper.checksum_id import checksum_id
 from app import db
 from flask import Flask, jsonify, request
-from datetime import date
+from datetime import date , datetime
 
 
 class Guest:
