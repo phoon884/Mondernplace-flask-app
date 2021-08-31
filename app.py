@@ -48,7 +48,7 @@ from src.Scheduler import Duplicate,Checkwaterflow,UpdatePaymentDue, CheckElectr
 @app.after_request
 def refresh_expiring_jwts(response):
     try:
-        print(response.response + " : " + str(datetime.now()))
+        print(str(datetime.now()))
         exp_timestamp = get_jwt()["exp"]
         now = datetime.now(timezone.utc)
         target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
