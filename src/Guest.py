@@ -7,16 +7,16 @@ from datetime import date , datetime
 class Guest:
     def Add_Guest(self):
         try:
-            id = request.json['id']                         #!'id': "X-XXXX-XXXXX-XX-X"
-            roomid = request.json['roomid']                 #!'roomid': "A|BXXX
-            first_name = request.json['first_name']         #!'first_name': str
-            last_name = request.json['last_name']           #!'last_name': str
-            DoB = request.json['DoB']                       #!'date': YYYY-mm-dd
-            check_in_date = request.json['check_in_date']   #!'date': YYYY-mm-dd
-            check_out_date = request.json['check_out_date']   #!'date': YYYY-mm-dd
-            status = request.json['status']                 #!'status' : Monthly|Daily|Annually|Empty
-            rent = request.json['rent']                     #!'rent' : int
-            deposit = request.json['deposit']               #!'deposit' : int(baht)
+            id = request.json['id']                                        #!'id': "X-XXXX-XXXXX-XX-X"
+            roomid = request.json['roomid']                              #!'roomid': "A|BXXX
+            first_name = request.json['first_name']                      #!'first_name': str
+            last_name = request.json['last_name']                        #!'last_name': str
+            DoB = request.json['DoB']                                   #!'date': YYYY-mm-dd
+            check_in_date = str(date.today().strftime('%Y-%m-%d'))      #!'date': YYYY-mm-dd
+            check_out_date = request.json['check_out_date']             #!'date': YYYY-mm-dd
+            status = request.json['status']                             #!'status' : Monthly|Daily|Annually|Empty
+            rent = request.json['rent']                                  #!'rent' : int
+            deposit = request.json['deposit']                            #!'deposit' : int(baht)
 
             # * VALIDATION
             if not checksum_id(id):
@@ -74,7 +74,7 @@ class Guest:
     def Remove_Guest(self):
         try:
             roomid = request.json['roomid']                             #!'roomid': "A|BXXX
-            check_out_date = date.today().strftime('%Y-%m-%d')          #!'date': YYYY-mm-dd
+            check_out_date = str(date.today().strftime('%Y-%m-%d'))     #!'date': YYYY-mm-dd
 
             room = db.room.find_one({"_id": roomid})
             if not room:

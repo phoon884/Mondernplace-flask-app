@@ -58,7 +58,7 @@ class User:
             del user['password']
             access_token = create_access_token(identity=user)
             csrf_token = get_csrf_token(access_token)
-            response = jsonify(msg= "login successful",csrf_token=csrf_token,date = str(datetime.datetime.now()))
+            response = jsonify(msg= "login successful",csrf_token=csrf_token)
             set_access_cookies(response, access_token)
             return response
 

@@ -6,14 +6,14 @@ from flask import Flask, jsonify, request
 class ElectricBill:
     def Input(self):
         try:
-            raw_data = request.json['data']             # !'raw_data': list of {roomid: A|BXXX, unit: int}
-            raw_date = request.json['date']             # ! 'rate': YYYY-mm-dd
+            raw_data = request.json['data']                               # !'raw_data': list of {roomid: A|BXXX, unit: int}
+            raw_date = str(date.today().strftime('%Y-%m-%d'))             # ! 'rate': YYYY-mm-dd
             processed_data = []
             for room in raw_data:
+                if db.elecbill.find_one({"date": raw_date, "roomid": room["roomid"]}):
+                    return {"error": "Data already in exist"} ,400
                 today_date  = date.today()
                 date_assigned = datetime.strptime(raw_date, '%Y-%m-%d')
-                if (abs(today_date-date_assigned.date()).days > 3) or (date_assigned.date()>today_date):
-                    return {"error": "Invalid date"} ,400
                 yesterday = datetime.strptime(
                     raw_date, '%Y-%m-%d')-timedelta(days=1)
                 yesterday = str(yesterday.strftime('%Y-%m-%d'))
