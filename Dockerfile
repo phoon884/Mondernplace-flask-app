@@ -9,6 +9,12 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
+RUN apt-get update -y
+
+RUN apt-get install -y tzdata
+
+ENV TZ Asia/Bangkok
+
 ENV FLASK_APP app.py
 
 CMD gunicorn --bind 0.0.0.0:$PORT app:app
