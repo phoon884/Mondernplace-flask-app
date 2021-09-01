@@ -143,13 +143,12 @@ class Guest:
             return {'Status': "Error", "error": "Internal Error"}, 500
     def RemovePaymentDue(self):
         try:
-            return(decode_token(request.cookies.get('access_token_cookie'))),200
             data = request.json
             result =  db.payment.delete_one(request.json)
             if result.deleted_count == 0:
                 return {"Status": "Error","error":"intended delete data not found"} , 400
             data["date_cleared"] = str(date.today().strftime('%Y-%m-%d'))
-            data["authorizer_token"] = request.cookies.get('access_token_cookie')
+            data["authorizer_token"] = decode_token(request.cookies.get('access_token_cookie'))["sub"]["email"]
             data["payment_type"] = "Cash"
             db.payment_log.insert_one(data)
             return {'Status': "Success"},200
