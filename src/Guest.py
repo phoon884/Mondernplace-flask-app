@@ -143,7 +143,7 @@ class Guest:
             return {'Status': "Error", "error": "Internal Error"}, 500
     def RemovePaymentDue(self):
         try:
-            print(decode_token(request.cookies.get('access_token_cookie')))
+            return(decode_token(request.cookies.get('access_token_cookie'))),200
             data = request.json
             result =  db.payment.delete_one(request.json)
             if result.deleted_count == 0:
