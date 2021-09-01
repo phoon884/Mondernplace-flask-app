@@ -2,7 +2,7 @@ from src.Helper.checksum_id import checksum_id
 from app import db
 from flask import Flask, jsonify, request
 from datetime import date , datetime
-
+from flask_jwt_extended import decode_token
 
 class Guest:
     def Add_Guest(self):
@@ -143,9 +143,15 @@ class Guest:
             return {'Status': "Error", "error": "Internal Error"}, 500
     def RemovePaymentDue(self):
         try:
+            print(decode_token(request.cookies.get('access_token_cookie')))
+            data = request.json
             result =  db.payment.delete_one(request.json)
             if result.deleted_count == 0:
                 return {"Status": "Error","error":"intended delete data not found"} , 400
+            data["date_cleared"] = str(date.today().strftime('%Y-%m-%d'))
+            data["authorizer_token"] = request.cookies.get('access_token_cookie')
+            data["payment_type"] = "Cash"
+            db.payment_log.insert_one(data)
             return {'Status': "Success"},200
         except Exception as e:
             print(e)
