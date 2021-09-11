@@ -144,7 +144,7 @@ class Guest:
     def RemovePaymentDue(self):
         try:
             data = request.json['room']
-            result =  db.payment.delete_one(request.json)
+            result =  db.payment.delete_one(data)
             if result.deleted_count == 0:
                 return {"Status": "Error","error":"intended delete data not found"} , 400
             data["date_cleared"] = str(date.today().strftime('%Y-%m-%d'))
