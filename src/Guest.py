@@ -61,12 +61,12 @@ class Guest:
                 }
                 db.guest.insert_one(data)
 
-                # * UPDATE room INFO
-                if db.room.update({"_id": roomid},
-                                  {"$set": {"status": status, "guest": id, "rent": rent, "deposit": deposit}}):
-                    return {'Status': "Success"}
-                else:
-                    return {'Status': "Error", "error": "Fatal error report to admin immediately roomid:{0} guestid:{1}".format(roomid, id)}, 500
+            # * UPDATE room INFO
+            if db.room.update({"_id": roomid},
+                              {"$set": {"status": status, "guest": id, "rent": rent, "deposit": deposit}}):
+                return {'Status': "Success"}
+            else:
+                return {'Status': "Error", "error": "Fatal error report to admin immediately roomid:{0} guestid:{1}".format(roomid, id)}, 500
         except Exception as e:
             print(e)
             return {'Status': "Error", "error": "Internal Error"}, 500
@@ -143,13 +143,13 @@ class Guest:
             return {'Status': "Error", "error": "Internal Error"}, 500
     def RemovePaymentDue(self):
         try:
-            data = request.json
+            data = request.json['room']
             result =  db.payment.delete_one(request.json)
             if result.deleted_count == 0:
                 return {"Status": "Error","error":"intended delete data not found"} , 400
             data["date_cleared"] = str(date.today().strftime('%Y-%m-%d'))
             data["authorizer_token"] = decode_token(request.cookies.get('access_token_cookie'))["sub"]["email"]
-            data["payment_type"] = "Cash"
+            data["payment_type"] = request.json['paymentType']
             db.payment_log.insert_one(data)
             return {'Status': "Success"},200
         except Exception as e:
