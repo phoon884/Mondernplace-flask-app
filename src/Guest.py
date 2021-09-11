@@ -148,7 +148,7 @@ class Guest:
             if result.deleted_count == 0:
                 return {"Status": "Error","error":"intended delete data not found"} , 400
             data["date_cleared"] = str(date.today().strftime('%Y-%m-%d'))
-            data["authorizer_token"] = decode_token(request.cookies.get('access_token_cookie'))["sub"]["email"]
+            data["authorizer"] = decode_token(request.cookies.get('access_token_cookie'))["sub"]["email"]
             data["payment_type"] = request.json['paymentType']
             db.payment_log.insert_one(data)
             return {'Status': "Success"},200

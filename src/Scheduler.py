@@ -9,9 +9,9 @@ def Duplicate():
     new = {
         "date": date_now,
         "data_unit": {
-            "day": date_split[2],
-            "month": date_split[1],
-            "year": date_split[0]
+            "day": int(date_split[2]),
+            "month": int(date_split[1]),
+            "year": int(date_split[0])
         },
         "data": data
     }

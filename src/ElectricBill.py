@@ -40,9 +40,9 @@ class ElectricBill:
                     "unit_change": unit_change,
                     "date": raw_date,
                     "data_unit": {
-                        "day": day,
-                        "month": month,
-                        "year": year
+                        "day": int(day),
+                        "month": int(month),
+                        "year": int(year)
                     }
                 }
                 db.elecbill.insert_one(data)
